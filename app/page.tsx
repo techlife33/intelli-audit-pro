@@ -1,273 +1,165 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
+import { Plus, FileText, Settings, FolderOpen, Users, FlaskConical, ClipboardCheck, Lightbulb } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Calendar, FileText, Users, AlertCircle, CheckCircle, Clock, Brain } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { NewAuditModal } from "@/components/new-audit-modal"
+import { AIConfigurationModal } from "@/components/ai-configuration-modal"
+import { AIExplanationModal } from "@/components/ai-explanation-modal"
+import { DocumentViewer } from "@/components/document-viewer"
+import { SampleTestingWorkflow } from "@/components/sample-testing-workflow"
+import { TeamCollaboration } from "@/components/team-collaboration"
+import { ReportTemplates } from "@/components/report-templates"
 
-interface Audit {
-  id: string
-  name: string
-  type: string
-  status: "In Progress" | "Completed" | "Pending Review" | "Draft"
-  progress: number
-  dueDate: string
-  documentsCount: number
-  evidenceCount: number
-  assignedTo: string[]
-}
-
-const mockAudits: Audit[] = [
-  {
-    id: "1",
-    name: "NCQA Accreditation 2024",
-    type: "NCQA",
-    status: "In Progress",
-    progress: 65,
-    dueDate: "2024-03-15",
-    documentsCount: 127,
-    evidenceCount: 89,
-    assignedTo: ["Sarah Johnson", "Mike Chen", "Lisa Rodriguez"],
-  },
-  {
-    id: "2",
-    name: "SOX Compliance Q4",
-    type: "SOX",
-    status: "Pending Review",
-    progress: 90,
-    dueDate: "2024-02-28",
-    documentsCount: 203,
-    evidenceCount: 156,
-    assignedTo: ["David Kim", "Anna Martinez"],
-  },
-  {
-    id: "3",
-    name: "HIPAA Security Assessment",
-    type: "HIPAA",
-    status: "Draft",
-    progress: 25,
-    dueDate: "2024-04-10",
-    documentsCount: 45,
-    evidenceCount: 23,
-    assignedTo: ["Robert Taylor"],
-  },
-]
-
-export default function Dashboard() {
-  const [selectedAudit, setSelectedAudit] = useState<string | null>(null)
-  const [showNewAuditModal, setShowNewAuditModal] = useState(false)
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "In Progress":
-        return "bg-blue-100 text-blue-800"
-      case "Completed":
-        return "bg-green-100 text-green-800"
-      case "Pending Review":
-        return "bg-yellow-100 text-yellow-800"
-      case "Draft":
-        return "bg-gray-100 text-gray-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
-  }
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "In Progress":
-        return <Clock className="h-4 w-4" />
-      case "Completed":
-        return <CheckCircle className="h-4 w-4" />
-      case "Pending Review":
-        return <AlertCircle className="h-4 w-4" />
-      case "Draft":
-        return <FileText className="h-4 w-4" />
-      default:
-        return <FileText className="h-4 w-4" />
-    }
-  }
-
-  const handleOpenAudit = (auditId: string) => {
-    window.location.href = `/audit/${auditId}`
-  }
-
-  const handleAIConfiguration = () => {
-    window.location.href = `/ai-configuration`
-  }
+export default function Component() {
+  const [isNewAuditModalOpen, setIsNewAuditModalOpen] = useState(false)
+  const [isAIConfigModalOpen, setIsAIConfigModalOpen] = useState(false)
+  const [isAIExplanationModalOpen, setIsAIExplanationModalOpen] = useState(false)
+  const [isDocumentViewerOpen, setIsDocumentViewerOpen] = useState(false)
+  const [isSampleTestingOpen, setIsSampleTestingOpen] = useState(false)
+  const [isTeamCollaborationOpen, setIsTeamCollaborationOpen] = useState(false)
+  const [isReportTemplatesOpen, setIsReportTemplatesOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <h1 className="text-2xl font-bold text-gray-900">IntelliAudit Pro</h1>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" onClick={() => setShowNewAuditModal(true)}>
-                <FileText className="h-4 w-4 mr-2" />
-                New Audit
-              </Button>
-              <Button variant="outline" onClick={handleAIConfiguration}>
-                <Brain className="h-4 w-4 mr-2" />
-                AI Configuration
-              </Button>
-              <div className="h-8 w-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">SJ</span>
-              </div>
-            </div>
-          </div>
+    <div className="flex min-h-screen w-full flex-col bg-gray-100">
+      <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-white px-4 md:px-6">
+        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+          <Link href="#" className="flex items-center gap-2 text-lg font-semibold md:text-base">
+            <FileText className="h-6 w-6" />
+            <span className="sr-only">IntelliAudit Pro</span>
+          </Link>
+          <Link href="#" className="text-gray-900 transition-colors hover:text-gray-900">
+            Dashboard
+          </Link>
+          <Link href="#" className="text-gray-500 transition-colors hover:text-gray-900">
+            Audits
+          </Link>
+          <Link href="#" className="text-gray-500 transition-colors hover:text-gray-900">
+            Reports
+          </Link>
+          <Link href="#" className="text-gray-500 transition-colors hover:text-gray-900">
+            Settings
+          </Link>
+        </nav>
+        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+          <Button variant="outline" className="ml-auto bg-transparent" onClick={() => setIsNewAuditModalOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            New Audit
+          </Button>
+          <Button variant="outline" onClick={() => setIsAIConfigModalOpen(true)}>
+            <Settings className="h-4 w-4 mr-2" />
+            AI Configuration
+          </Button>
+          <Link href="/newflow">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Flow
+            </Button>
+          </Link>
         </div>
       </header>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <FileText className="h-8 w-8 text-blue-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Active Audits</p>
-                  <p className="text-2xl font-bold text-gray-900">3</p>
-                </div>
-              </div>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Audits</CardTitle>
+              <FileText className="h-4 w-4 text-gray-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">23</div>
+              <p className="text-xs text-gray-500">Completed: 18, In Progress: 5</p>
             </CardContent>
           </Card>
-
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <Users className="h-8 w-8 text-green-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Team Members</p>
-                  <p className="text-2xl font-bold text-gray-900">8</p>
-                </div>
-              </div>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Compliance Rate</CardTitle>
+              <ClipboardCheck className="h-4 w-4 text-gray-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">85%</div>
+              <p className="text-xs text-gray-500">Avg. across all audits</p>
             </CardContent>
           </Card>
-
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <Calendar className="h-8 w-8 text-orange-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Due This Month</p>
-                  <p className="text-2xl font-bold text-gray-900">2</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <CheckCircle className="h-8 w-8 text-purple-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Completed</p>
-                  <p className="text-2xl font-bold text-gray-900">12</p>
-                </div>
-              </div>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">AI Explainability</CardTitle>
+              <Lightbulb className="h-4 w-4 text-gray-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">High Transparency</div>
+              <p className="text-xs text-gray-500">Detailed AI rationale available</p>
             </CardContent>
           </Card>
         </div>
-
-        {/* Audits List */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Current Audits</CardTitle>
-            <CardDescription>Manage and track your ongoing audit processes</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {mockAudits.map((audit) => (
-                <div
-                  key={audit.id}
-                  className="border rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => setSelectedAudit(audit.id)}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <h3 className="text-lg font-semibold text-gray-900">{audit.name}</h3>
-                      <Badge variant="secondary">{audit.type}</Badge>
-                      <Badge className={getStatusColor(audit.status)}>
-                        {getStatusIcon(audit.status)}
-                        <span className="ml-1">{audit.status}</span>
-                      </Badge>
-                    </div>
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleOpenAudit(audit.id)
-                      }}
-                    >
-                      Open Audit
-                    </Button>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <Card className="col-span-4">
+            <CardHeader>
+              <CardTitle>Recent Audits</CardTitle>
+              <CardDescription>Overview of your latest audit activities.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold">NCQA Accreditation 2024</h3>
+                    <p className="text-sm text-gray-500">Due: 2024-12-31</p>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      Due: {audit.dueDate}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <FileText className="h-4 w-4 mr-2" />
-                      {audit.documentsCount} Documents
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      {audit.evidenceCount} Evidence Items
-                    </div>
-                  </div>
-
-                  <div className="mb-4">
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>Progress</span>
-                      <span>{audit.progress}%</span>
-                    </div>
-                    <Progress value={audit.progress} className="h-2" />
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-600">Assigned to:</span>
-                    <div className="flex space-x-1">
-                      {audit.assignedTo.map((person, index) => (
-                        <div
-                          key={index}
-                          className="h-6 w-6 bg-blue-600 rounded-full flex items-center justify-center text-xs text-white"
-                          title={person}
-                        >
-                          {person
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  <Button variant="outline" size="sm">
+                    Open Audit
+                  </Button>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold">HIPAA Compliance Review</h3>
+                    <p className="text-sm text-gray-500">Due: 2024-08-15</p>
+                  </div>
+                  <Button variant="outline" size="sm">
+                    Open Audit
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="col-span-3">
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+              <CardDescription>Access key features quickly.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-2">
+              <Button variant="outline" onClick={() => setIsAIExplanationModalOpen(true)}>
+                <Lightbulb className="h-4 w-4 mr-2" />
+                AI Explanations
+              </Button>
+              <Button variant="outline" onClick={() => setIsDocumentViewerOpen(true)}>
+                <FolderOpen className="h-4 w-4 mr-2" />
+                Document Viewer
+              </Button>
+              <Button variant="outline" onClick={() => setIsSampleTestingOpen(true)}>
+                <FlaskConical className="h-4 w-4 mr-2" />
+                Sample Testing
+              </Button>
+              <Button variant="outline" onClick={() => setIsTeamCollaborationOpen(true)}>
+                <Users className="h-4 w-4 mr-2" />
+                Team Collaboration
+              </Button>
+              <Button variant="outline" onClick={() => setIsReportTemplatesOpen(true)}>
+                <ClipboardCheck className="h-4 w-4 mr-2" />
+                Report Templates
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
 
-      {/* New Audit Modal */}
-      <NewAuditModal isOpen={showNewAuditModal} onClose={() => setShowNewAuditModal(false)} />
+      <NewAuditModal isOpen={isNewAuditModalOpen} onClose={() => setIsNewAuditModalOpen(false)} />
+      <AIConfigurationModal isOpen={isAIConfigModalOpen} onClose={() => setIsAIConfigModalOpen(false)} />
+      <AIExplanationModal isOpen={isAIExplanationModalOpen} onClose={() => setIsAIExplanationModalOpen(false)} />
+      <DocumentViewer isOpen={isDocumentViewerOpen} onClose={() => setIsDocumentViewerOpen(false)} />
+      <SampleTestingWorkflow isOpen={isSampleTestingOpen} onClose={() => setIsSampleTestingOpen(false)} />
+      <TeamCollaboration isOpen={isTeamCollaborationOpen} onClose={() => setIsTeamCollaborationOpen(false)} />
+      <ReportTemplates isOpen={isReportTemplatesOpen} onClose={() => setIsReportTemplatesOpen(false)} />
     </div>
   )
 }
